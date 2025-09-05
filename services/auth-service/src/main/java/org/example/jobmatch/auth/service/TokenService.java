@@ -1,5 +1,10 @@
 package org.example.jobmatch.auth.service;
 
+import org.example.jobmatch.auth.entity.Token;
+import org.example.jobmatch.auth.entity.User;
+
+import java.util.Optional;
+
 /**
  * RefreshTokenService
  *
@@ -14,7 +19,8 @@ package org.example.jobmatch.auth.service;
  */
 public interface TokenService {
     // TODO: add fields, constructors, and methods
-    public String generateNewToken();
-    public void validateToken(String token);
-    public void deleteToken(String refreshToken);
+    Token createRefreshToken(User user);
+    Optional<Token> findByToken(String token);
+    boolean revokeToken(String token);
+    void revokeAllUserTokens(User user);
 }

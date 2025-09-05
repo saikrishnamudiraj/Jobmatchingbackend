@@ -1,5 +1,11 @@
 package org.example.jobmatch.auth.dto.response;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.stereotype.Service;
+
 /**
  * AuthResponse
  *
@@ -12,6 +18,12 @@ package org.example.jobmatch.auth.dto.response;
  * - Implement methods to fulfill responsibilities above.
  * - Add unit tests under src/test/java for this class.
  */
+
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class AuthResponse {
     // TODO: add fields, constructors, and methods
+    private String accessToken;
 }
