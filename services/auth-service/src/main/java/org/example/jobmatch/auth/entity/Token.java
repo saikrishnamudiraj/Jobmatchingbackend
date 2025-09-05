@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 /**
  * RefreshToken
  *
@@ -18,18 +20,28 @@ import lombok.Setter;
  * - Implement methods to fulfill responsibilities above.
  * - Add unit tests under src/test/java for this class.
  */
-@Setter
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "refresh_tokens")
+@Table(name = "refresh_tokens", indexes = {
+        @Index(name = "idx_refresh_token_token", columnList = "token")
+})
 public class Token extends BaseModel {
-    // TODO: add fields, constructors, and methods
-    @Column(name = "token", nullable = false, unique = true, length = 512)
+
+    @Column(nullable = false, unique = true, length = 512)
     private String token;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @Column(name = "issued_at")
+    private LocalDateTime issuedAt;
+
+    @Column(name = "expires_at")
+    private LocalDateTime expiresAt;
+
+    private boolean revoked;
 }

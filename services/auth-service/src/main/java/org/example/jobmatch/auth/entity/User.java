@@ -29,7 +29,7 @@ import java.util.List;
 @Table(name = "users")
 public class User extends BaseModel {
     // TODO: add fields, constructors, and methods
-    @Column(name = "username", nullable = false, unique = true)
+    @Column(name = "username", nullable = false)   // removed unique = true
     private String username;
 
     @Column(name = "password", nullable = false)
@@ -43,9 +43,10 @@ public class User extends BaseModel {
     @JoinColumn(name = "role_id")
     private Role role;
 
-    // One-to-one relationship to token (optional)
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private Token token;
+    // One-to-many relationship to token (optional)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Token> tokens;
 
     // Simple collections of strings -> use element collections
     @ElementCollection

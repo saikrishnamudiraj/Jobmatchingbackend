@@ -1,8 +1,11 @@
 package org.example.jobmatch.auth.service;
 
+import org.example.jobmatch.auth.dto.request.LoginRequest;
 import org.example.jobmatch.auth.dto.request.SignupRequest;
+import org.example.jobmatch.auth.entity.Token;
 import org.example.jobmatch.auth.entity.User;
 import org.example.jobmatch.auth.repository.UserRepository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -23,9 +26,12 @@ import java.util.Optional;
 public class AuthServiceImpl implements AuthService {
 
     private UserRepository userRepository;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public AuthServiceImpl(UserRepository userRepository) {
+    public AuthServiceImpl(UserRepository userRepository,
+                           BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
     @Override
     public String signUp(SignupRequest signupRequest) {
@@ -34,7 +40,7 @@ public class AuthServiceImpl implements AuthService {
             User user = new User();
             user.setUsername(signupRequest.getUsername());
             user.setEmail(signupRequest.getEmail());
-            user.setPassword(signupRequest.getPassword());
+            user.setPassword(bCryptPasswordEncoder.encode(signupRequest.getPassword()));
             userRepository.save(user);
         } else {
             throw new RuntimeException("User already exists");
@@ -43,8 +49,19 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void logIn(String username, String password) {
+    public User logIn(LoginRequest loginRequest) {
+        Optional<User> optionalUser = userRepository.findByUsernameOrEmail(loginRequest.getUsername(), loginRequest.getEmail());
+        User user = null;
+        if (optionalUser.isPresent()) {
+            user = optionalUser.get();
+            if (bCryptPasswordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
 
+            }
+        } else {
+            throw new RuntimeException("User not found");
+        }
+
+        return user;
     }
 
     @Override
