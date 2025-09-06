@@ -11,6 +11,6 @@ package org.example.jobmatch.user.controller;
  * - Implement methods to fulfill responsibilities above.
  * - Add unit tests under src/test/java for this class.
  */
-public class UserController {
-    // TODO: add fields, constructors, and methods
+public class
+UserController {
 }

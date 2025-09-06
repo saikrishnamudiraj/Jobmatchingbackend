@@ -8,30 +8,19 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-/**
- * RefreshToken
- *
- * TODOs / responsibilities:
- * - Define core responsibilities of this class.
- * - Add validation and error handling.
- * - Write unit tests for happy and unhappy paths.
- *
- * Implementation notes:
- * - Implement methods to fulfill responsibilities above.
- * - Add unit tests under src/test/java for this class.
- */
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "refresh_tokens", indexes = {
-        @Index(name = "idx_refresh_token_token", columnList = "token")
-})
+@Table(name = "tokens")
 public class Token extends BaseModel {
 
     @Column(nullable = false, unique = true, length = 512)
-    private String token;
+    private String refreshToken;
+
+//    @Column(nullable = false, unique = true, length = 512)
+//    private String accessToken;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)

@@ -2,33 +2,27 @@ package org.example.jobmatch.auth.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
-/**
- * SecurityConfig
- *
- * TODOs / responsibilities:
- * - Configure security filters (JWT & OAuth2).
- * - Permit /api/auth/** endpoints.
- *
- * Implementation notes:
- * - Implement methods to fulfill responsibilities above.
- * - Add unit tests under src/test/java for this class.
- */
 @Configuration
 public class SecurityConfig {
-    // TODO: add fields, constructors, and methods
-        @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // disable CSRF for simplicity
+                .csrf(csrf -> csrf.disable()) // disable for stateless REST APIs
+                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .formLogin(form -> form.disable()) // disable default form login behavior
+                .httpBasic(basic -> basic.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll() // allow all requests
+                        .requestMatchers(HttpMethod.POST, "/users/login", "/auth/refresh").permitAll()
+                        .requestMatchers("/public/**", "/swagger-ui/**").permitAll()
+                        .anyRequest().authenticated()
                 );
-
+        // add JWT filter
         return http.build();
-
     }
 }

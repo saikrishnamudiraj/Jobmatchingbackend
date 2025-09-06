@@ -7,26 +7,19 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.Authentication;
+import org.example.jobmatch.auth.entity.User;
 
-/**
- * WebSecurityBeans
- *
- * TODOs / responsibilities:
- * - Define core responsibilities of this class.
- * - Add validation and error handling.
- * - Write unit tests for happy and unhappy paths.
- *
- * Implementation notes:
- * - Implement methods to fulfill responsibilities above.
- * - Add unit tests under src/test/java for this class.
- */
+import java.util.stream.Collectors;
+
+
 @Configuration
 public class WebSecurityBeans {
-    // TODO: add fields, constructors, and methods
     private final UserRepository userRepository;
 
     public WebSecurityBeans(UserRepository userRepository) {
@@ -38,31 +31,28 @@ public class WebSecurityBeans {
      * The returned UserDetails contains password and granted authorities built from role.name.
      */
     @Bean
-    public UserDetailsService userDetailsService() {
-        return username -> {
-            User user = userRepository.findByEmail(username)
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
-            // convert your Role to GrantedAuthority
-            var authorities = user.getRole() == null ? java.util.List.<org.springframework.security.core.authority.SimpleGrantedAuthority>of()
-                    : java.util.List.of(new org.springframework.security.core.authority.SimpleGrantedAuthority(user.getRole().getName()));
-
-            return org.springframework.security.core.userdetails.User.builder()
-                    .username(user.getUsername())
-                    .password(user.getPassword())
-                    .authorities(authorities)
-                    .accountExpired(false)
-                    .accountLocked(false)
-                    .credentialsExpired(false)
-                    .disabled(false)
-                    .build();
-        };
+    public UserDetailsService userDetailsService(UserRepository userRepository) {
+        return usernameOrEmail -> userRepository
+                .findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
+                .map(u -> org.springframework.security.core.userdetails.User
+                        .withUsername(u.getUsername())
+                        .password(u.getPassword())
+                        .authorities(u.getRoles().stream()
+                                .map(r -> new SimpleGrantedAuthority(r.getName()))
+                                .collect(Collectors.toList()))   // safer - works on older Java too
+                        .accountExpired(false)
+                        .accountLocked(false)
+                        .credentialsExpired(false)
+                        .disabled(u.isDeleted())
+                        .build())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + usernameOrEmail));
     }
 
     /**
      * Password encoder bean (BCrypt).
      */
     @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 

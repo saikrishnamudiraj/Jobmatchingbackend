@@ -2,6 +2,7 @@ package org.example.jobmatch.auth.service;
 
 import org.example.jobmatch.auth.dto.request.LoginRequest;
 import org.example.jobmatch.auth.dto.request.SignupRequest;
+import org.example.jobmatch.auth.dto.response.LoginResponse;
 import org.example.jobmatch.auth.entity.Token;
 import org.example.jobmatch.auth.entity.User;
 
@@ -20,6 +21,6 @@ import org.example.jobmatch.auth.entity.User;
 public interface AuthService {
     // TODO: add fields, constructors, and methods
     public String signUp(SignupRequest signupRequest);
-    public User logIn(LoginRequest loginRequest);
+    public LoginResponse logIn(LoginRequest loginRequest);
     public void logOut(String refreshToken);
 }
