@@ -1,7 +1,7 @@
 package org.example.jobmatch.user.entity;
 
 /**
- * Experience
+ * Skill
  *
  * TODOs / responsibilities:
  * - Define core responsibilities of this class.
@@ -12,6 +12,8 @@ package org.example.jobmatch.user.entity;
  * - Implement methods to fulfill responsibilities above.
  * - Add unit tests under src/test/java for this class.
  */
-public class Experience {
-    // TODO: add fields, constructors, and methods
+public enum UserType {
+    Premium,
+    Standard,
+    Deleted
 }

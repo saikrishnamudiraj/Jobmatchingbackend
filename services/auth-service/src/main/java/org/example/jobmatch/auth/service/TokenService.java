@@ -20,7 +20,7 @@ import java.util.Optional;
 public interface TokenService {
     // TODO: add fields, constructors, and methods
     Token createRefreshToken(User user);
-    Optional<Token> findByToken(String token);
+    Optional<Token> findByRefreshToken(String token);
     boolean revokeToken(String token);
     void revokeAllUserTokens(User user);
 }

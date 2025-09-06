@@ -22,7 +22,7 @@ import java.util.Optional;
 public interface TokenRepository extends JpaRepository<Token, Long> {
     // TODO: add fields, constructors, and methods
     Token save(Token token);
-    Optional<Token> findByToken(String token);
+    Optional<Token> findByRefreshToken(String token);
     List<Token> findAllByUserAndRevokedFalse(User user);
-    void deleteByToken(String token);
+    void deleteByRefreshToken(String token);
 }

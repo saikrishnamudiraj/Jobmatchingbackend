@@ -25,7 +25,7 @@ import java.util.Optional;
  * - Implement methods to fulfill responsibilities above.
  * - Add unit tests under src/test/java for this class.
  */
-@Service("tokenServiceimpl")
+@Service
 public class TokenServiceImpl implements TokenService {
     private final TokenRepository tokenRepository;
     private final TokenUtil tokenUtil;
@@ -64,9 +64,9 @@ public class TokenServiceImpl implements TokenService {
         // attempt to generate unique token
         for (int i = 0; i < 5; i++) {
             String candidate = tokenUtil.generateToken(this.tokenByteLength);
-            if (tokenRepository.findByToken(candidate).isEmpty()) {
+            if (tokenRepository.findByRefreshToken(candidate).isEmpty()) {
                 Token token = new Token();
-                token.setToken(candidate);
+                token.setRefreshToken(candidate);
                 token.setUser(managedUser);   // IMPORTANT: use managed entity
                 token.setIssuedAt(LocalDateTime.now());
                 token.setExpiresAt(LocalDateTime.now().plusSeconds(refreshTokenValiditySeconds));
@@ -78,14 +78,14 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public Optional<Token> findByToken(String token) {
-        return tokenRepository.findByToken(token);
+    public Optional<Token> findByRefreshToken(String token) {
+        return tokenRepository.findByRefreshToken(token);
     }
 
     @Override
     @Transactional
     public boolean revokeToken(String tokenStr) {
-        Optional<Token> t = tokenRepository.findByToken(tokenStr);
+        Optional<Token> t = tokenRepository.findByRefreshToken(tokenStr);
         if (t.isPresent()) {
             Token token = t.get();
             token.setRevoked(true);
