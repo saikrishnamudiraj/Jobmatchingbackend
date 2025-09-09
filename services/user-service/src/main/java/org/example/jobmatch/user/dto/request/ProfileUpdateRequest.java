@@ -1,17 +1,27 @@
 package org.example.jobmatch.user.dto.request;
 
-/**
- * ProfileUpdateRequest
- *
- * TODOs / responsibilities:
- * - Define core responsibilities of this class.
- * - Add validation and error handling.
- * - Write unit tests for happy and unhappy paths.
- *
- * Implementation notes:
- * - Implement methods to fulfill responsibilities above.
- * - Add unit tests under src/test/java for this class.
- */
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.List;
+
+
+@Setter
+@Getter
+@NoArgsConstructor
 public class ProfileUpdateRequest {
-    // TODO: add fields, constructors, and methods
+    private String firstName;
+    private String lastName;
+    private String phoneNumber;
+    private List<String> skills;
+    private List<String> languages;
+    private List<String> companies;
+    private String profileSummary;
+    private String profilePicture;
+    private Integer experienceYears;
+    private Double salary;
+    private List<String> certifications;
+    private List<String> educations;
+    private List<String> interests;
 }

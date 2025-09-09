@@ -1,5 +1,9 @@
 package org.example.jobmatch.user.dto.response;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 /**
  * PublicProfileResponse
  *
@@ -12,6 +16,10 @@ package org.example.jobmatch.user.dto.response;
  * - Implement methods to fulfill responsibilities above.
  * - Add unit tests under src/test/java for this class.
  */
-public class PublicProfileResponse {
+@Setter
+@Getter
+@NoArgsConstructor
+public class ProfileUpdateResponse {
     // TODO: add fields, constructors, and methods
+  private String message;
 }
